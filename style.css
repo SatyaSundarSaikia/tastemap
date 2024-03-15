@@ -1,0 +1,459 @@
+html,
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: arial;
+
+}
+/* #top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 35px; /* Adjust the height as needed */
+    /* background-color: #333; Set the background color
+    z-index: 1000; Set the z-index to make sure it's above other elements
+} */
+
+/* Adjust the styling of the bar content as needed */
+/* #top-bar-content {
+    color: brown;
+    padding: 8px;
+} */ 
+
+#top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background-color: darkslategrey;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#title {
+    
+    font-size: 18px; /* Adjust the font size as needed */
+    font-weight: bold; /* Add bold styling if desired */
+    color: #fff; /* Set the text color to white or your preferred color */
+    margin: 0 auto; /* Center the title horizontally */
+}
+
+#query_panel_btn {
+    position: absolute;
+    z-index: 600;
+    top: 1%;
+    left: 0.3%;
+}
+
+
+#map {
+    position: absolute;
+    top: 22px; /* Adjust this value to provide space below the top bar */
+    left: 0;
+    width: 100%;
+    height: calc(100% - 30px); /* Adjust to fill the remaining space */
+}
+
+#query_tab {
+    position: absolute;
+    padding: 0.5% 0%;
+    left: 0;
+    top: 50px; /* Adjust this value to provide space below the top bar */
+    width: 0;
+    height: 100%;
+    visibility: hidden;
+    overflow: scroll;
+}
+
+/* 
+#map {
+    position: absolute;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    //  border-style: solid;
+    // border-color: black;
+    // border-width: thin;
+
+} */
+
+
+/* #query_tab {
+    position: absolute;
+    padding: 0.5% 0%;
+    left: 0%;
+    width: 0%;
+    height: 100%;
+    //border-style: solid;
+    //border-color: black;
+    //border-width: thin;
+    visibility: hidden;
+    //overflow: scroll;
+
+} */
+
+#legend {
+    z-index: 11;
+    padding: 2px 4px;
+    border: 1px solid grey;
+    position: absolute;
+    bottom: 7%;
+    height: 0%;
+    overflow: scroll;
+    width: 0%;
+    right: 0%;
+    z-index: 10000;
+    background-color: #ffffff;
+    font-weight: bold;
+    visibility: hidden;
+
+}
+
+#layer {
+    position: relative;
+    width: 85%;
+}
+
+#attributes {
+    position: relative;
+    width: 85%;
+}
+
+#operator {
+    position: relative;
+    width: 85%;
+}
+
+#value {
+    position: relative;
+    width: 85%;
+}
+
+#layer1 {
+    position: relative;
+    width: 85%;
+}
+
+#draw_type {
+    position: relative;
+    width: 85%;
+}
+
+
+#table_data {
+    position: absolute;
+    bottom: 0%;
+    overflow: scroll;
+    left: 0%;
+    right: 0%;
+    height: 0%;
+    border: 1px solid #4CAF50;
+}
+
+#table {
+    white-space: nowrap;
+    grid-template-areas: "head-fixed""body-scrollable";
+}
+
+
+#table th {
+    position: -webkit-sticky;
+    /* for Safari */
+    position: sticky;
+    top: 0px;
+    background-color: rgb(122, 209, 100);
+}
+/* 
+#wms_layers_btn {
+    position: absolute;
+    z-index: 600;
+    top: 50%;
+    left: 1%; /* Adjust this value to control the distance from the left */
+    /* transform: translateY(-50%);
+} */ 
+
+
+#legend_btn {
+    position: absolute;
+    z-index: 600;
+    bottom: 2%;
+    right: 0%;
+    background-color:aquamarine;
+}
+
+
+#table_wms_layers {
+    white-space: nowrap;
+    grid-template-areas: "head-fixed""body-scrollable";
+}
+
+#table_wms_layers th {
+    position: -webkit-sticky;
+    /* for Safari */
+    position: sticky;
+    top: 0px;
+    background-color: rgb(122, 209, 100);
+}
+
+
+.modal-dialog {
+    max-width: 60% !important;
+    height: 60% !important;
+    top: 18% !important;
+
+
+}
+
+/*.form-select {
+    left: 0%;
+    width: 85% !important;
+
+}*/
+
+/*.form-control {
+    left: 0%;
+    width: 85% !important;
+
+}*/
+#clear_btn {
+    border:none;
+    position: absolute;
+    z-index: 500;
+    top: 45%; /* Adjust this value to position it below #wms_layers_btn */
+    left: 0.3%; /* Align it with #wms_layers_btn */
+    transform: translateY(-50%);
+    padding:  1px 3px;
+}
+
+#full-screen-btn {
+    border: none;
+    padding: 1px 3px;
+    position: absolute; /* Use fixed positioning for absolute placement */
+    top: 39%; /* Adjust the top position */
+    left: 0.3%; /* Adjust the right position */
+    cursor: pointer;
+    z-index: 1000;
+}
+#add-layer-btn {
+    border: none;
+    padding: 1px 3px;
+    position: absolute; /* Use fixed positioning for absolute placement */
+    top: 51%; /* Adjust the top position */
+    left: 0.3%; /* Adjust the right position */
+    cursor: pointer;
+    z-index: 1000;
+
+}
+
+
+
+#wms_layers_btn {
+    border:none;
+    padding: 1px 3px;
+    position: absolute;
+    z-index: 600;
+    top: 49%;
+    left: 0.3%; /* Adjust this value based on your layout */
+    transform: translateY(-50%);
+    background-color: gainsboro;
+}
+
+#info_btn {
+    position: absolute;
+    z-index: 500;
+    padding: 0.02px 0.06px;
+    width:1.5%;
+    height:2%;
+    top: 61%; /* Adjust this value to position it below #wms_layers_btn */
+    left: 0.3%; /* Align it with #wms_layers_btn */
+    transform: translateY(-50%);
+    background-color: transparent;
+}
+
+#print-map-btn {
+    border:none;
+    padding: 1px 3px;
+    position: absolute;
+    z-index: 600;
+    top: 53%;
+    left: 0.3%; /* Adjust this value based on your layout */
+    transform: translateY(-50%);
+    background-color: gainsboro;
+
+}
+
+
+#measuretype {
+    
+        position: absolute;
+        z-index: 500;
+        top: 66%; 
+        left: 0.2%;
+        width: 7%;
+        transform: translateY(-50%); 
+        background-color: rgba(0, 0, 0, 0.5)
+    } 
+
+    #layer-btn {
+        border:none;
+        padding: 1px 3px;
+        position: absolute;
+        z-index: 600;
+        top: 55%;
+        left: 0.3%; /* Adjust this value based on your layout */
+        transform: translateY(-50%);
+        background-color: gainsboro;
+    
+    }
+
+
+    .btn-group1 {
+        z-index: 1000;
+        border: none;
+        padding: 0px 0px;
+        position: absolute; /* Use fixed positioning for absolute placement */
+        top: 57%; /* Adjust the top position */
+        left: 0.3%; /* Adjust the right position */
+        cursor: pointer;
+        font-size: 0.8rem;
+        margin-left: 1px
+     }
+
+/* Add custom styling for the measure button icon */
+.btn-group .btn.measure-btn-icon {
+    
+    color: #fff; /* Text color */
+}
+
+/* Adjust position if needed */
+.btn-group {
+   z-index: 1000;
+   border: none;
+   padding: 0px 3px;
+   position: absolute; /* Use fixed positioning for absolute placement */
+   top: 55%; /* Adjust the top position */
+   left: 0%; /* Adjust the right position */
+   cursor: pointer;
+   font-size: 0.8rem;
+}
+
+/* Style the dropdown menu */
+.btn-group .dropdown-menu.measure-dropdown {
+    background-color:grey; /* Background color of the dropdown menu */
+    color: #fff; /* Text color */
+}
+
+.btn-group .dropdown-menu.measure-dropdown a {
+    color: #fff; /* Text color of dropdown items */
+}
+
+.btn-group .dropdown-menu.measure-dropdown a:hover {
+    background-color: blue; /* Background color on hover */
+    color: #fff; /* Text color on hover */
+}
+
+#scale_bar {
+
+    position: absolute;
+    z-index: 500;
+    bottom: 0%;
+    left: 20%;
+}
+
+
+.ol-popup-content {
+
+    max-width: 500px;
+}
+
+.ol-scale-step-text {
+    /* //color: red; */
+}
+
+.ol-scale-text {
+    /* //color: red; */
+    font-weight: bold;
+}
+
+.layer-switcher.shown {
+    max-height: 465px;
+}
+
+.ol-control button {
+    background-color: rgba(40, 40, 40, 0.8) !important;
+}
+
+.ol-control button:hover {
+    background-color: rgba(40, 40, 40, 1) !important;
+}
+
+.ol-mouse-position {
+    top: 95%;
+    left: 0.5%;
+    position: absolute;
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.ol-zoom-extent {
+    top: 3.8em;
+    left: 0.5em;
+    position: absolute;
+}
+
+.ol-zoomslider {
+    top: 5.8em;
+    left: 0.5em;
+    position: absolute;
+    height: 200px;
+}
+
+.ol-geocoder.gcd-gl-container {
+    top: 21.875em;
+    left: 0.5em;
+    position: absolute;
+}
+
+
+
+.tooltip {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.tooltip-measure {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.tooltip-static {
+    background-color: #ffcc33;
+    color: black;
+    border: 1px solid white;
+}
+
+.tooltip-measure:before,
+.tooltip-static:before {
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    margin-left: -7px;
+    left: 50%;
+}
+
+.tooltip-static:before {
+    border-top-color: #ffcc33;
+}
