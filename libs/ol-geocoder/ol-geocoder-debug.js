@@ -673,7 +673,7 @@
       var url = encodeUrlXhr(obj.url, obj.data);
       var config = {
         method: 'GET',
-        mode: 'cors',
+        mode: 'no-cors',
         credentials: 'same-origin',
       };
 

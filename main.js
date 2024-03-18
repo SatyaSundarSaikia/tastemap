@@ -25,8 +25,7 @@ var base_maps = new ol.layer.Group({
             type: 'base',
             visible: true,
             source: new ol.source.XYZ({
-                attributions: ['Powered by Esri',
-                    'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'
+                attributions: [
                 ],
                 attributionsCollapsible: false,
                 url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -39,17 +38,28 @@ var base_maps = new ol.layer.Group({
             visible: true,
             source: new ol.source.OSM()
         }),
-
+        
         new ol.layer.Tile({
-            title: 'Humanitarian',
+            title: 'Standard',
             type: 'base',
             visible: true, // You can set this to true if you want this basemap to be visible by default
             source: new ol.source.XYZ({
-                attributions: ['Powered by Esri',
-                    'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'
+                attributions: [
                 ],
                 attributionsCollapsible: false,
-                url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Humanitarian_Map/MapServer/tile/{z}/{y}/{x}', // URL for the humanitarian basemap
+                url: 'https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', // URL for the World Street Map
+                maxZoom: 23
+            })
+        }),
+        new ol.layer.Tile({
+            title: 'Transport',
+            type: 'base',
+            visible: true, // You can set this to true if you want this basemap to be visible by default
+            source: new ol.source.XYZ({
+                attributions: [
+                ],
+                attributionsCollapsible: false,
+                url: 'https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', // URL for the World Transportation Map
                 maxZoom: 23
             })
         })
@@ -95,7 +105,9 @@ var popup = new Popup();
 map.addOverlay(popup);
 
 var mouse_position = new ol.control.MousePosition();
+projection: 'EPSG:4326',
 map.addControl(mouse_position);
+
 var slider = new ol.control.ZoomSlider();
 map.addControl(slider);
 
@@ -130,6 +142,8 @@ map.addControl(layerSwitcher);
 
 layerSwitcher.renderPanel();
 
+
+
 var geocoder = new Geocoder('nominatim', {
     provider: 'osm',
     lang: 'en',
@@ -150,6 +164,7 @@ geocoder.on('addresschosen', function(evt) {
         popup.show(evt.coordinate, evt.address.formatted);
     }, 3000);
 });
+
 
 
 

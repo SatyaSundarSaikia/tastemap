@@ -361,7 +361,7 @@ body {
     position: absolute;
     z-index: 500;
     bottom: 0%;
-    left: 20%;
+    left: 3%;
 }
 
 
@@ -392,12 +392,18 @@ body {
 }
 
 .ol-mouse-position {
-    top: 95%;
-    left: 0.5%;
-    position: absolute;
-    font-size: 14px;
-
-    font-weight: bold;
+    position: fixed;
+    top: auto;
+    right: auto;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 5px;
+    background-color: rgba(225, 225,225,0.6);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 12px;
 }
 
 .ol-zoom-extent {
