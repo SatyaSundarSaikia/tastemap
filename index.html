@@ -15,13 +15,9 @@
 
     <script src="libs/jquery.js"></script>
 
+
     <script src="libs/v6.13.0-dist/ol.js"></script>
     <link rel="stylesheet" href="libs/v6.13.0-dist/ol.css">
-
-    
-
-
-
 
     <script src="libs/ol-layerswitcher-master/dist/ol-layerswitcher.js"></script>
     <link rel="stylesheet" href="libs/ol-layerswitcher-master/dist/ol-layerswitcher.css" />
@@ -36,58 +32,105 @@
     <link rel="stylesheet" href="libs/jquery-ui-1.12.1/jquery-ui.css">
     <script src="libs/jquery-ui-1.12.1/external/jquery/jquery.js"></script>
     <script src="libs/jquery-ui-1.12.1/jquery-ui.js"></script>
-     
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="print.css" type="text/css" media="print">
 
-  </head>
+</head>
 
 <body>
     <div id="top-bar">
         <div id="title">ASSAM STATE SPACE APPLICATION CENTRE</div>
-        <button onclick="show_hide_querypanel()" type="button" id="query_panel_btn" class="btn btn-success btn-sm">☰</button>
+        <button onclick="show_hide_querypanel()" type="button" id="query_panel_btn"
+            class="btn btn-success btn-sm">☰</button>
     </div>
-      
+
     <div id="map" class="map">
 
 
+
         <div id="scale_bar"></div>
+
+
+        <button id="trackBtn">
+            <i class="material-icons">location_on</i>
+        </button>
+
+
+
         <!-- <div id="scale_bar1"></div> -->
-        <button onclick="wms_layers()" type="button" id="wms_layers_btn" ><i class="material-icons">
-            event_available
+        <button onclick="wms_layers()" type="button" id="wms_layers_btn"><i class="material-icons">
+                event_available
             </i></button>
-        
-        <button onclick="clear_all()" type="button" id="clear_btn" ><i class="material-icons">home</i></button>
-        <button onclick="toggleFullScreen()" type="button" id="full-screen-btn" >
+
+        <button onclick="clear_all()" type="button" id="clear_btn"><i class="material-icons">home</i></button>
+        <button onclick="toggleFullScreen()" type="button" id="full-screen-btn">
             <i class="material-icons">fullscreen</i>
         </button>
 
-        <button onclick="printMap()" type="button" id="print-map-btn">
+
+        <button id="print" class="print-hide" onclick="display_toggle_side_Popup('print-map-btn')">
             <i class="material-icons">print</i>
         </button>
+        <ul id="print-map-btn" class="side_menu_popup print-hide">
+            <form id="printform">
+                <label for="format">Page_Size </label>
+                <select id="format">
+                    <option value="a0">A0 (slow)</option>
+                    <option value="a1">A1</option>
+                    <option value="a2">A2</option>
+                    <option value="a3">A3</option>
+                    <option value="a4" selected>A4</option>
+                    <option value="a5">A5 (fast)</option>
+                </select>
+                <label for="resolution">Resolution </label>
+                <select id="resolution">
+                    <option value="72">72 dpi (fast)</option>
+                    <option value="150">150 dpi</option>
+                    <option value="300">300 dpi (slow)</option>
+                </select>
+                <label for="scale">Scale </label>
+                <select id="scale">
+                    <option value="500">1:500000</option>
+                    <option value="250">1:250000</option>
+                    <option value="100">1:100000</option>
+                    <option value="50">1:50000</option>
+                    <option value="25">1:25000</option>
+                    <option value="10">1:10000</option>
+                </select>
+                <button id="export-pdf" onclick="exportPDF()">Export PDF</button>
+            </form>
+        </ul>
 
 
         <!-- Add a new button for the layer with a material icon -->
-<!-- <button onclick="addLayer1()" type="button" id="add-layer-btn">
+        <!-- <button onclick="addLayer1()" type="button" id="add-layer-btn">
     <i class="material-icons">layers</i>
 </button> -->
 
-<div class="btn-group1">
-    <button type="button" id="layer-btn" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="material-icons">layers</i>
-    </button>
-    <ul class="dropdown-menu" id="layer-dropdown">
-        <li><a class="dropdown-item" href="#" onclick="addLayer('Layer 1')">Add Layer 1</a></li>
-        <li><a class="dropdown-item" href="#" onclick="addLayer('Layer 2')">Add Layer 2</a></li>
-        <li><a class="dropdown-item" href="#" onclick="addLayer('Layer 2')">Add Layer 3</a></li>
-    </ul>
-</div>
-        
-        <div id="legend"></div>
-        <button onclick="show_hide_legend()" type="button" id="legend_btn" class="btn btn-success btn-sm">☰ Show Legend</button>
-        <button onclick="info()" type="button" id="info_btn" class="btn btn-success btn-sm">A/D</button>
+        <div class="btn-group1">
+            <button type="button" id="layer-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="material-icons">layers</i>
+            </button>
+            <ul class="dropdown-menu" id="layer-dropdown">
+                <li><a class="dropdown-item" href="#" data-layer="Country">Layer Country</a></li>
+                <li><a class="dropdown-item" href="#" data-layer="State">Layer State</a></li>
+                <li><a class="dropdown-item" href="#" data-layer="District">Layer District</a></li>
+                <li><a class="dropdown-item" href="#" data-layer="Village">Layer Village</a></li>
+            </ul>
+        </div>
 
+        <div id="legend"></div>
+        <button onclick="show_hide_legend()" type="button" id="legend_btn" class="btn btn-success btn-sm">☰ Show
+            Legend</button>
+        <button onclick="info()" type="button" id="info_btn" class="btn btn-success btn-sm">
+            <span class="material-icons">info</span> <!-- Google Font icon for information -->
+        </button>
         <select id="measuretype" class="form-select form-select-sm" aria-label=".form-select-sm example">
             <option value="select">Select Measure option</option>
             <option value="length">Length (LineString)</option>
@@ -95,19 +138,31 @@
             <option value="clear">Clear Measurement</option>
         </select>
 
-          <!-- Button to trigger the dropdown -->
-            <!-- Measure Options as an icon button with dropdown -->
+        <div class="icon-container">
+            <span class="material-icons icon" onclick="toggleInputs()">add_location</span>
+            <div class="icon-content" id="iconContent">
+                Latitude: <input type="text" id="latitudeInput"><br>
+                Longitude: <input type="text" id="longitudeInput"><br>
+                <button id="locate_Pindrop">Drop Pin</button>
+                <button id="locate_Pinremove">Remove Pins</button>
+            </div>
+        </div>
+
+
+
+        <!-- Button to trigger the dropdown -->
+        <!-- Measure Options as an icon button with dropdown -->
         <!-- <div class="btn-group">
             <button type="button"  data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="material-icons">straighten</i>
             </button>
             <ul class="dropdown-menu measure-dropdown">
-                <li><a class="dropdown-item" href="#">Length (LineString)</a></li>
-                <li><a class="dropdown-item" href="#">Area (Polygon)</a></li>
-                <li><a class="dropdown-item" href="#">Clear Measurement</a></li>
+                <li><a class="dropdown-item" href=''>Length (LineString)</a></li>
+                <li><a class="dropdown-item" href=''>Area (Polygon)</a></li>
+                <li><a class="dropdown-item" href=''>Clear Measurement</a></li>
             </ul>
         </div> -->
-        </div>
+    </div>
     </div>
 
 
@@ -116,12 +171,16 @@
     <div id="query_tab">
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist" style="font-size:14px;">
-                <button class="nav-link active" id="nav-attributes-tab" data-bs-toggle="tab" data-bs-target="#nav-attributes" type="button" role="tab" aria-controls="nav-attributes" aria-selected="true">Select by Attributes</button>
-                <button class="nav-link" id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button" role="tab" aria-controls="nav-draw" aria-selected="false">Select by Draw</button>
+                <button class="nav-link active" id="nav-attributes-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-attributes" type="button" role="tab" aria-controls="nav-attributes"
+                    aria-selected="true">Select by Attributes</button>
+                <button class="nav-link" id="nav-draw-tab" data-bs-toggle="tab" data-bs-target="#nav-draw" type="button"
+                    role="tab" aria-controls="nav-draw" aria-selected="false">Select by Draw</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-attributes" role="tabpanel" aria-labelledby="nav-attributes-tab">
+            <div class="tab-pane fade show active" id="nav-attributes" role="tabpanel"
+                aria-labelledby="nav-attributes-tab">
                 <label for="layer"><b>Select Layer</b></label>
                 <select id="layer" class="form-select form-select-sm" aria-label=".form-select-sm example">
                     <option selected>Select Layer</option>
@@ -152,7 +211,7 @@
                 <label for="draw_type"><b>Select Geometry Type</b></label>
                 <select id="draw_type" class="form-select form-select-sm" aria-label=".form-select-sm example">
 
-                <option value="select">Select Shape</option>
+                    <option value="select">Select Shape</option>
                     <option value="Square">Square</option>
                     <option value="Box">Box</option>
                     <option value="Polygon">Polygon</option>
@@ -171,7 +230,8 @@
     <div id="table_data" style="font-size:15px;"></div>
     <!-- Scrollable modal -->
 
-    <div class="modal fade" id="wms_layers_window" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="wms_layers_window" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -183,18 +243,31 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button onclick="close_wms_window()" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                    <button onclick="add_layer()" type="button" id="add_map_btn" class="btn btn-primary btn-sm">Add Layer to Map</button>
+                    <button onclick="close_wms_window()" type="button" class="btn btn-secondary btn-sm"
+                        data-bs-dismiss="modal">Close</button>
+                    <button onclick="add_layer()" type="button" id="add_map_btn" class="btn btn-primary btn-sm">Add
+                        Layer to Map</button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- <div class="cntr" id="cntr">
+        <div class="cntr-inner">
+            <label class="search" for="inpt_search">
+                <input id="input_search" type="text"/>
+            </label>
+        </div>
+        <div class="liveDataDiv" id="liveDataDiv"></div>
+    </div>
+   
+    <input type="text" id="searchInput">
+   -->
 
 
     <script src="main.js"></script>
-   
+    <script src="maps.js"></script>
+
 </body>
 
 </html>

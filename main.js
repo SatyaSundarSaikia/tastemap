@@ -1,3 +1,4 @@
+
 var map, geojson, featureOverlay, overlays, style;
 var selected, features, layer_name, layerControl;
 var content;
@@ -38,7 +39,7 @@ var base_maps = new ol.layer.Group({
             visible: true,
             source: new ol.source.OSM()
         }),
-        
+       
         new ol.layer.Tile({
             title: 'Standard',
             type: 'base',
@@ -91,15 +92,129 @@ overlays = new ol.layer.Group({
             })
         });*/
 
+        var vectorSource = new ol.source.Vector(); // Create vector source
+
+        var vectorLayer = new ol.layer.Vector({ // Create vector layer
+            source: vectorSource
+        });
+
+
+
 map = new ol.Map({
     target: 'map',
     view: view,
+   
     // overlays: [overlay]
 });
 
 
 map.addLayer(base_maps);
 map.addLayer(overlays);
+map.addLayer(vectorLayer);
+
+// //adding the pindrop
+
+// var vectorLayer = new ol.layer.Vector({
+//     source: new ol.source.Vector()
+// });
+// map.addLayer(vectorLayer);
+
+// function dropPin() {
+//     var latitude = parseFloat(document.getElementById('latitudeInput').value);
+//     var longitude = parseFloat(document.getElementById('longitudeInput').value);
+
+//     // Check if latitude and longitude are valid
+//     if (isNaN(latitude) || isNaN(longitude)) {
+//         alert('Please enter valid latitude and longitude.');
+//         return;
+//     }
+
+//     var coordinates = ol.proj.fromLonLat([longitude, latitude]);
+
+//     // Clear previous markers
+//     vectorLayer.getSource().clear();
+
+//     // Add new marker
+//     var marker = new ol.Feature({
+//         geometry: new ol.geom.Point(coordinates)
+//     });
+
+//     // Style the marker
+//     var markerStyle = new ol.style.Style({
+//         image: new ol.style.Icon({
+//             src: 'https://openlayers.org/en/latest/examples/data/icon.png', // You can use any image URL here
+//             anchor: [0.5, 1]
+//         })
+//     });
+
+//     marker.setStyle(markerStyle);
+
+//     // Add marker to the vector layer
+//     vectorLayer.getSource().addFeature(marker);
+
+//     // Zoom to the marker
+//     map.getView().animate({ center: coordinates, zoom: 10 });
+// }
+
+// Add an empty vector source to hold pins
+const pinSource = new ol.source.Vector();
+const pinLayer = new ol.layer.Vector({
+    source: pinSource
+});
+map.addLayer(pinLayer);
+
+
+// Function to toggle the display of the input fields
+function toggleInputs() {
+    const iconContent = document.getElementById('iconContent');
+    iconContent.style.display = iconContent.style.display === 'block' ? 'none' : 'block';
+}
+
+
+// Add event listener to drop a pin
+document.getElementById('locate_Pindrop').addEventListener('click', function () {
+    // Get longitude and latitude values from input fields
+    let lat = parseFloat(document.getElementById("latitudeInput").value);
+    let lon = parseFloat(document.getElementById("longitudeInput").value);
+
+    // Ensure that lon and lat are valid numbers
+    if (isNaN(lon) || isNaN(lat) || lon < -180 || lon > 180 || lat < -90 || lat > 90) {
+        alert("Please enter valid longitude (-180 to 180) and latitude (-90 to 90) values.");
+        return;
+    }
+
+    // Center the map view to the specified coordinates
+    map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+    map.getView().setZoom(15); // Set desired zoom level
+
+    // Drop a pin at the specified coordinates
+    let pinFeature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
+    });
+
+    // Add the pin feature to the pin source
+    pinSource.addFeature(pinFeature);
+
+    let pinStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            src: './image/pinn.png' // URL to the pin icon
+        })
+    });
+
+    pinFeature.setStyle(pinStyle);
+});
+
+// Add event listener to remove all pins
+document.getElementById('locate_Pinremove').addEventListener('click', function () {
+    pinSource.clear(); // Clear all features from the pin source
+});
+
+
+
+
+
+
 //overlays.getLayers().push(ind_state);
 var popup = new Popup();
 map.addOverlay(popup);
@@ -121,7 +236,7 @@ var zoom_ex = new ol.control.ZoomToExtent({
 });
 map.addControl(zoom_ex);
 
-var scale_line = new ol.control.ScaleLine({
+var scaleLine = new ol.control.ScaleLine({
     units: 'metric',
     bar: true,
     steps: 6,
@@ -129,7 +244,7 @@ var scale_line = new ol.control.ScaleLine({
     minWidth: 140,
     target: 'scale_bar'
 });
-map.addControl(scale_line);
+map.addControl(scaleLine);
 
 layerSwitcher = new ol.control.LayerSwitcher({
     activationMode: 'click',
@@ -259,7 +374,7 @@ $(document).ready(function() {
 });
 
 
-// attribute dropdown		
+// attribute dropdown      
 $(function() {
     $("#layer").change(function() {
 
@@ -284,7 +399,7 @@ $(function() {
 
                     var select = $('#attributes');
                     //var title = $(xml).find('xsd\\:complexType').attr('name');
-                    //	alert(title);
+                    //  alert(title);
                     $(xml).find('xsd\\:sequence').each(function() {
 
                         $(this).find('xsd\\:element').each(function() {
@@ -409,12 +524,12 @@ function query() {
         selectedFeature.setStyle();
         selectedFeature = undefined;
     }
-	if (vector1) {
+    if (vector1) {
         vector1.getSource().clear();
-		// $('#table').empty();
+        // $('#table').empty();
     }
 
-    //alert('jsbchdb');	
+    //alert('jsbchdb');
     var layer = document.getElementById("layer");
     var value_layer = layer.options[layer.selectedIndex].value;
     //alert(value_layer);
@@ -587,8 +702,8 @@ function highlight(evt) {
         // alert(coordinate);
         /*var content1 = '<h3>' + feature.get([name]) + '</h3>';
         content1 += '<h5>' + feature.get('crop')+' '+ value_param +' '+ value_seas+' '+value_level+'</h5>'
-		content1 += '<h5>' + feature.get([value_param]) +' '+ unit +'</h5>';
-		
+        content1 += '<h5>' + feature.get([value_param]) +' '+ unit +'</h5>';
+       
        // alert(content1);
         content.innerHTML = content1;
         overlay.setPosition(coordinate);*/
@@ -652,7 +767,7 @@ function highlight(evt) {
   $("#table td").each(function() {
     if ($(this).text() == feature.get('gid')) {
      // $(this).css('color', 'red');
-	   $(this).parent("tr").css("background-color", "grey");
+       $(this).parent("tr").css("background-color", "grey");
     }
   });
 });*/
@@ -829,7 +944,7 @@ function wms_layers() {
 }
 // add wms layer to map on click of button
 function add_layer() {
-    //	alert("jd"); 
+    //  alert("jd");
 
     // alert(layer_name);
     //map.removeControl(layerSwitcher);
@@ -972,6 +1087,21 @@ function toggleFullScreen() {
     }
 }
 
+//adding layers
+
+// Function to add layers
+function addLayer(layerName) {
+    console.log("Adding layer:", layerName);
+    // Assuming 'map' is an object representing your map interface
+    map.addControl(layerName);
+}
+
+// Add event listener to all dropdown items
+document.querySelectorAll('.dropdown-item').forEach(item => {
+    item.addEventListener('click', function(event) {
+        addLayer(this.dataset.layer);
+    });
+});
 
 // clear function
 function clear_all() {
@@ -1046,7 +1176,7 @@ function clear_all() {
 
     if (measureTooltipElement) {
         var elem = document.getElementsByClassName("tooltip tooltip-static");
-        //$('#measure_tool').empty(); 
+        //$('#measure_tool').empty();
 
         //alert(elem.length);
         for (var i = elem.length - 1; i >= 0; i--) {
@@ -1093,7 +1223,7 @@ function show_hide_legend() {
     if (document.getElementById("legend").style.visibility == "hidden") {
 
         document.getElementById("legend_btn").innerHTML = "☰ Hide Legend";
-		document.getElementById("legend_btn").setAttribute("class", "btn btn-danger btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn btn-danger btn-sm");
 
         document.getElementById("legend").style.visibility = "visible";
         document.getElementById("legend").style.width = "15%";
@@ -1101,7 +1231,7 @@ function show_hide_legend() {
         document.getElementById('legend').style.height = '38%';
         map.updateSize();
     } else {
-	    document.getElementById("legend_btn").setAttribute("class", "btn btn-success btn-sm");
+        document.getElementById("legend_btn").setAttribute("class", "btn btn-success btn-sm");
         document.getElementById("legend_btn").innerHTML = "☰ Show Legend";
         document.getElementById("legend").style.width = "0%";
         document.getElementById("legend").style.visibility = "hidden";
@@ -1127,13 +1257,13 @@ draw_type.onchange = function() {
     }
     if (vector1) {
         vector1.getSource().clear();
-		// $('#table').empty();
+        // $('#table').empty();
     }
-	
+   
 
     if (measureTooltipElement) {
         var elem = document.getElementsByClassName("tooltip tooltip-static");
-        //$('#measure_tool').empty(); 
+        //$('#measure_tool').empty();
 
         //alert(elem.length);
         for (var i = elem.length - 1; i >= 0; i--) {
@@ -1203,7 +1333,7 @@ function add_draw_Interaction() {
                 return geometry;
             };
         }
-        
+       
         // map.addInteraction(draw1);
 
         if (draw_type.value == 'select' || draw_type.value == 'clear') {
@@ -1218,7 +1348,7 @@ function add_draw_Interaction() {
         } else if (draw_type.value == 'Square' || draw_type.value == 'Polygon' || draw_type.value == 'Circle' || draw_type.value == 'Star' || draw_type.value == 'Box')
 
         {
-		draw1 = new ol.interaction.Draw({
+        draw1 = new ol.interaction.Draw({
             source: source1,
             type: value,
             geometryFunction: geometryFunction
@@ -1385,14 +1515,25 @@ measuretype.onchange = function() {
 
 
 
-    map.un('singleclick', getinfo);
-    document.getElementById("info_btn").innerHTML = "☰ Activate GetInfo";
-    document.getElementById("info_btn").setAttribute("class", "btn btn-success btn-sm");
-    if (popup) {
-        popup.hide();
-    }
-    map.removeInteraction(draw);
-    addInteraction();
+//     map.un('singleclick', getinfo);
+//     document.getElementById("info_btn").innerHTML = "☰ Activate GetInfo";
+//     document.getElementById("info_btn").setAttribute("class", "btn btn-success btn-sm");
+//     if (popup) {
+//         popup.hide();
+//     }
+//     map.removeInteraction(draw);
+//     addInteraction();
+// };
+
+
+map.un('singleclick', getinfo);
+document.getElementById("info_btn").innerHTML = '<i class="fas fa-info"></i> Activate GetInfo'; // Using Font Awesome icon for menu
+document.getElementById("info_btn").setAttribute("class", "btn btn-success btn-sm");
+if (popup) {
+    popup.hide();
+}
+map.removeInteraction(draw);
+addInteraction();
 };
 
 
@@ -1536,18 +1677,18 @@ function addInteraction() {
     if (measuretype.value == 'select' || measuretype.value == 'clear') {
 
         if (draw) {
-            map.removeInteraction(draw)
+            // map.removeInteraction(draw)
         };
         if (vectorLayer) {
             vectorLayer.getSource().clear();
         }
         if (helpTooltip) {
-            map.removeOverlay(helpTooltip);
+            // map.removeOverlay(helpTooltip);
         }
 
         if (measureTooltipElement) {
             var elem = document.getElementsByClassName("tooltip tooltip-static");
-            //$('#measure_tool').empty(); 
+            //$('#measure_tool').empty();
 
             //alert(elem.length);
             for (var i = elem.length - 1; i >= 0; i--) {
@@ -1715,3 +1856,231 @@ function createMeasureTooltip() {
 
 }
 
+//print button
+           
+// Define base layer
+const raster = new ol.layer.Tile({
+    source: new ol.source.OSM(),
+  });
+  
+  // Define vector layer with a polygon feature
+  const format = new ol.format.WKT();
+  const feature = format.readFeature(
+    'POLYGON((10.689697265625 -25.0927734375, 34.595947265625 ' +
+    '-20.1708984375, 38.814697265625 -35.6396484375, 13.502197265625 ' +
+    '-39.1552734375, 10.689697265625 -25.0927734375))',
+  );
+  feature.getGeometry().transform('EPSG:4326', 'EPSG:3857');
+  
+  
+  const vector = new ol.layer.Vector({
+    source: vectorSource,
+    opacity: 0.5,
+  });
+
+// Define export dimensions
+const dims = {
+    a0: [1189, 841],
+    a1: [841, 594],
+    a2: [594, 420],
+    a3: [420, 297],
+    a4: [297, 210],
+    a5: [210, 148],
+  };
+  
+  
+  // export options for html2canvase.
+  // See: https://html2canvas.hertzen.com/configuration
+  const exportOptions = {
+    useCORS: true,
+    ignoreElements: function (element) {
+      const className = element.className || '';
+      return (
+        className.includes('ol-control') &&
+        !className.includes('ol-scale') &&
+        (!className.includes('ol-attribution') ||
+          !className.includes('ol-uncollapsible'))
+      );
+    },
+  };
+  // Define export button functionality
+  const exportButton = document.getElementById('export-pdf');
+  
+  exportButton.addEventListener(
+      'click',
+      function (){
+          // Disable the export button and change cursor to progress
+          exportButton.disabled = true;
+          document.body.style.cursor = 'progress';
+  
+          const format = document.getElementById('format').value;
+      const resolution = document.getElementById('resolution').value;
+      const scale = document.getElementById('scale').value;
+      const dim = dims[format];
+      const width = Math.round((dim[0] * resolution) / 25.4);
+      const height = Math.round((dim[1] * resolution) / 25.4);
+      const viewResolution = map.getView().getResolution();
+      const scaleResolution =
+        scale /
+        ol.proj.getPointResolution(
+          map.getView().getProjection(),
+          resolution / 25.4,
+          map.getView().getCenter(),
+        );
+          // Wait for the map to render completely
+          map.once('rendercomplete', function () {
+            exportOptions.width = width;
+        exportOptions.height = height;
+        html2canvas(map.getViewport(), exportOptions).then(function (canvas) {
+          const pdf = new jspdf.jsPDF('landscape', undefined, format);
+          pdf.addImage(
+            canvas.toDataURL('image/jpeg'),
+            'JPEG',
+            0,
+            0,
+            dim[0],
+            dim[1],
+          );
+          pdf.save('map.pdf');
+          // Reset original map size
+          scaleLine.setDpi();
+          map.getTargetElement().style.width = '';
+          map.getTargetElement().style.height = '';
+          map.updateSize();
+          map.getView().setResolution(viewResolution);
+          exportButton.disabled = false;
+          document.body.style.cursor = 'auto';
+        });
+      });
+  
+         // Set print size
+      scaleLine.setDpi(resolution);
+      map.getTargetElement().style.width = width + 'px';
+      map.getTargetElement().style.height = height + 'px';
+      map.updateSize();
+      map.getView().setResolution(scaleResolution);
+    },
+    false,
+  );
+  
+
+
+
+
+
+//geolocation:
+
+const geolocation = new ol.Geolocation({
+    // enableHighAccuracy must be set to true to have the heading value.
+    trackingOptions: {
+        enableHighAccuracy: true,
+    },
+    projection: view.getProjection(),
+});
+
+function el(id) {
+    return document.getElementById(id);
+}
+
+// Get the button element
+const trackBtn = document.getElementById('trackBtn');
+
+// Add click event listener to the button
+trackBtn.addEventListener('click', function() {
+    // Toggle geolocation tracking
+    const isTracking = geolocation.getTracking();
+    geolocation.setTracking(!isTracking);
+});
+
+// Update the HTML page when the position changes.
+geolocation.on('change', function () {
+    el('accuracy').innerText = geolocation.getAccuracy() + ' [m]';
+    el('altitude').innerText = geolocation.getAltitude() + ' [m]';
+    el('altitudeAccuracy').innerText = geolocation.getAltitudeAccuracy() + ' [m]';
+    el('heading').innerText = geolocation.getHeading() + ' [rad]';
+    el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
+});
+
+// Handle geolocation error.
+geolocation.on('error', function (error) {
+    const info = document.getElementById('info');
+    info.innerHTML = error.message;
+    info.style.display = '';
+});
+
+const accuracyFeature = new ol.Feature();
+geolocation.on('change:accuracyGeometry', function () {
+    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+});
+
+const positionFeature = new ol.Feature();
+positionFeature.setStyle(
+    new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 6,
+            fill: new ol.style.Fill({
+                color: '#3399CC',
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#fff',
+                width: 2,
+            }),
+        }),
+    })
+);
+
+geolocation.on('change:position', function () {
+    const coordinates = geolocation.getPosition();
+    positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
+});
+
+new ol.layer.Vector({
+    map: map,
+    source: new ol.source.Vector({
+        features: [accuracyFeature, positionFeature],
+    }),
+});
+
+
+// --------------------------------------------------------------------
+
+
+// const format = new ol.format.GeoJSON({featureProjection: 'EPSG:3857'});
+// const download = document.getElementById('download');
+// download.addEventListener('click', function(){
+//     console.log("hii")
+
+//     source.on('change', function () {
+//         const features = vector1.getFeatures();
+//         const json = format.writeFeatures(features);
+//         download.href =
+//         'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+//     });
+   
+   
+   
+// })
+
+
+
+
+//index
+/* <select id="measuretype" class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <option value="select">Select Measure option</option>
+            <option value="length">Length (LineString)</option>
+            <option value="area">Area (Polygon)</option>
+            <option value="clear">Clear Measurement</option>
+           
+           
+        </select>
+        <button value="download" id="download">download</button>
+
+         <div class="icon-container">
+        <span class="material-icons icon" onclick="toggleInputs()">add_location</span>
+        <div class="icon-content" id="iconContent">
+            Latitude: <input type="text" id="latitudeInput"><br>
+            Longitude: <input type="text" id="longitudeInput"><br>
+            <button onclick="dropPin()">Drop Pin</button>
+        </div>
+    </div> */
+ 

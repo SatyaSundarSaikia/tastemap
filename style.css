@@ -1,11 +1,72 @@
+
+
+
 html,
 body {
     height: 100%;
     padding: 0;
     margin: 0;
     font-family: arial;
-
 }
+
+
+
+/* Print-specific CSS */
+@media print {
+    /* Hide elements with class print-hide during printing */
+    .print-hide {
+      display: none !important;
+    }
+  }
+
+  #print{ 
+    position:absolute;
+        top:449px;
+        left:-4px;
+        z-index: 1000;
+        font-size: 24px;
+        cursor: pointer;
+        margin-left: 10px; /* Adjust as needed */
+        border:none;
+    }
+
+    #print-map-btn {
+        position: absolute;
+        z-index: 5000;
+        top: 61%;
+        left: 2.5em;
+        display: none;
+        transition: display 0.3s ease;
+        z-index: 1;
+        background-color: white;
+        padding: 10px;
+        width: 180px;
+    }
+    
+    #print-map-btn.show {
+        display: block;
+    }
+    
+    
+    
+    
+    
+    #print-map-btn select {
+        width: 90%;
+        border-radius: 3px;
+        background-color: #c4c4c4;
+        padding: 5px;
+    }
+    
+    #print-map-btn button {
+        border-radius: 7px;
+        padding: 5px;
+        background-color: red;
+        margin: 20px 0 20px 0;
+    }
+    
+    
+
 /* #top-bar {
     position: fixed;
     top: 0;
@@ -20,7 +81,11 @@ body {
 /* #top-bar-content {
     color: brown;
     padding: 8px;
-} */ 
+} */
+
+
+
+
 
 #top-bar {
     position: fixed;
@@ -35,7 +100,7 @@ body {
     align-items: center;
 }
 #title {
-    
+   
     font-size: 18px; /* Adjust the font size as needed */
     font-weight: bold; /* Add bold styling if desired */
     color: #fff; /* Set the text color to white or your preferred color */
@@ -69,7 +134,7 @@ body {
     overflow: scroll;
 }
 
-/* 
+/*
 #map {
     position: absolute;
     left: 0%;
@@ -167,14 +232,14 @@ body {
     top: 0px;
     background-color: rgb(122, 209, 100);
 }
-/* 
+/*
 #wms_layers_btn {
     position: absolute;
     z-index: 600;
     top: 50%;
     left: 1%; /* Adjust this value to control the distance from the left */
     /* transform: translateY(-50%);
-} */ 
+} */
 
 
 #legend_btn {
@@ -224,9 +289,10 @@ body {
     position: absolute;
     z-index: 500;
     top: 45%; /* Adjust this value to position it below #wms_layers_btn */
-    left: 0.3%; /* Align it with #wms_layers_btn */
+    left: 0.5em; /* Align it with #wms_layers_btn */
     transform: translateY(-50%);
     padding:  1px 3px;
+    background-color: gainsboro;
 }
 
 #full-screen-btn {
@@ -234,16 +300,17 @@ body {
     padding: 1px 3px;
     position: absolute; /* Use fixed positioning for absolute placement */
     top: 39%; /* Adjust the top position */
-    left: 0.3%; /* Adjust the right position */
+    left: 0.5em; /* Adjust the right position */
     cursor: pointer;
     z-index: 1000;
+    background-color: gainsboro;
 }
 #add-layer-btn {
     border: none;
     padding: 1px 3px;
     position: absolute; /* Use fixed positioning for absolute placement */
     top: 51%; /* Adjust the top position */
-    left: 0.3%; /* Adjust the right position */
+    left: 0.5em; /* Adjust the right position */
     cursor: pointer;
     z-index: 1000;
 
@@ -257,21 +324,22 @@ body {
     position: absolute;
     z-index: 600;
     top: 49%;
-    left: 0.3%; /* Adjust this value based on your layout */
+    left: 0.5em; /* Adjust this value based on your layout */
     transform: translateY(-50%);
     background-color: gainsboro;
 }
 
 #info_btn {
+    border:none;
     position: absolute;
     z-index: 500;
-    padding: 0.02px 0.06px;
-    width:1.5%;
-    height:2%;
+    padding: 1px 3px;
+    width:1.6%;
+    height:3%;
     top: 61%; /* Adjust this value to position it below #wms_layers_btn */
     left: 0.3%; /* Align it with #wms_layers_btn */
     transform: translateY(-50%);
-    background-color: transparent;
+    background-color: gainsboro;
 }
 
 #print-map-btn {
@@ -280,7 +348,7 @@ body {
     position: absolute;
     z-index: 600;
     top: 53%;
-    left: 0.3%; /* Adjust this value based on your layout */
+    left: 0.5em; /* Adjust this value based on your layout */
     transform: translateY(-50%);
     background-color: gainsboro;
 
@@ -288,15 +356,15 @@ body {
 
 
 #measuretype {
-    
+   
         position: absolute;
         z-index: 500;
-        top: 66%; 
+        top: 75%;
         left: 0.2%;
         width: 7%;
-        transform: translateY(-50%); 
+        transform: translateY(-50%);
         background-color: rgba(0, 0, 0, 0.5)
-    } 
+    }
 
     #layer-btn {
         border:none;
@@ -307,7 +375,7 @@ body {
         left: 0.3%; /* Adjust this value based on your layout */
         transform: translateY(-50%);
         background-color: gainsboro;
-    
+   
     }
 
 
@@ -325,7 +393,7 @@ body {
 
 /* Add custom styling for the measure button icon */
 .btn-group .btn.measure-btn-icon {
-    
+   
     color: #fff; /* Text color */
 }
 
@@ -463,3 +531,142 @@ body {
 .tooltip-static:before {
     border-top-color: #ffcc33;
 }
+
+
+
+.icon-container {
+    position: absolute;
+    display: inline-block;
+    z-index:5000;
+   
+}
+
+.icon {
+    border:none;
+    position: absolute;
+    top: 565px;
+    left: 0.15em;
+    font-size: 35px;
+    cursor: pointer;
+    background-color: gainsboro;
+}
+
+.icon-content {
+    position: absolute;
+    top: 565px;
+    left: 3.5em;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+    z-index:5000;
+}
+
+live search functionality in openlayer
+
+
+.search {
+    display: inline-block;
+    position: absolute;
+
+    bottom: 109px;
+    right: 194px;
+    height: 30px;
+    width: 30px;
+    box-sizing: border-box;
+    /* 0px 8px 7px 0px; */
+    margin-left: -35px;
+    padding: 7px 9px 0px 9px;
+    border: 3px solid rgba(60, 116, 189, 0.3);
+    background-color: rgba(155, 192, 241, 0.3);
+    border-radius: 25px;
+    transition: all 200ms ease;
+    cursor: text;
+}
+
+.search:after {
+    content: "";
+    position: absolute;
+    top: 25px;
+    height: 20px;
+    width: 3px;
+    right: -5px;
+    background: #ffffff;
+   border-radius: 3px;
+    transform: rotate(-45deg);
+    transition: all 200ms ease;
+}
+ .search.active,
+     .search:hover {
+        width: 300px;
+        margin-right: 0px;
+        margin-left: -305px;
+        background-color: rgba(155, 192, 241, 0.7);
+     }
+.search:after {
+    height: 0px;
+}
+
+.input_search {
+    position: absolute;
+    top: 3px;
+    width: 100%;
+    border: none;
+    box-sizing: border-box;
+    font-family: Helvetica;
+    font-size: 15px;
+    color: inherit;
+    background: transparent;
+    outline-width: 0px;
+}
+
+/* ***start : CSS for search bar *** */
+
+
+
+
+/* live location search  */
+
+
+/* #btnCrosshair {
+    z-index: 3;
+    position: absolute;
+    background-color: rgba(40, 40, 40, 1);
+    top: 779px;
+    width: 40px;
+    height: 40px;
+    right: 20px;
+    bottom: 20px;
+    border: none;
+    color: white;
+    }
+
+#btnCrosshair .clicked {
+    color: red;
+} */
+
+/*
+# {
+    z-index: 3;
+    position: absolute;
+    background-color: rgba(40, 40, 40, 1);
+    top: 779px;
+    width: 40px;
+    height: 40px;
+    right: 20px;
+    bottom: 20px;
+    border: none;
+    color: white;
+    } */
+
+
+
+    #trackBtn {
+        position: absolute;
+        border:none;
+        z-index: 3000;
+        top: 610px;
+        left: 9px;
+     
+       
+    }
