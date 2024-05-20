@@ -7,8 +7,8 @@ var selectedFeature;
 
 var view = new ol.View({
     projection: 'EPSG:4326',
-    center: [82.00, 23.00],
-    zoom: 5,
+    center: [91.74, 26.18],
+    zoom: 10,
 
 });
 var view_ov = new ol.View({
@@ -19,6 +19,7 @@ var view_ov = new ol.View({
 
 
 var base_maps = new ol.layer.Group({
+
     'title': 'Base maps',
     layers: [
         new ol.layer.Tile({
@@ -33,12 +34,7 @@ var base_maps = new ol.layer.Group({
                 maxZoom: 23
             })
         }),
-        new ol.layer.Tile({
-            title: 'OSM',
-            type: 'base',
-            visible: true,
-            source: new ol.source.OSM()
-        }),
+   
        
         new ol.layer.Tile({
             title: 'Standard',
@@ -63,42 +59,60 @@ var base_maps = new ol.layer.Group({
                 url: 'https://services.arcgisonline.com/arcgis/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', // URL for the World Transportation Map
                 maxZoom: 23
             })
-        })
+        }),
+        new ol.layer.Tile({
+            title: 'OSM',
+            type: 'base',
+            visible: true,
+            source: new ol.source.OSM()
+        }),
 
 
     ]
 });
+
+var layer_map = new ol.layer.Group({
+
+    'title': 'Label',
+    layers: [
+       
+        new ol.layer.Tile({
+            title: 'Label',
+            type: 'overlay',
+            visible: true, // You can set this to true if you want this basemap to be visible by default
+            source: new ol.source.XYZ({
+                attributions: [
+                ],
+                attributionsCollapsible: false,
+                url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', // URL for the World Street Map
+                maxZoom: 23
+            })
+        }),
+
+
+    ]
+});
+
+
+
+
 var OSM = new ol.layer.Tile({
     source: new ol.source.OSM(),
     type: 'base',
     title: 'OSM',
 });
 
+
 overlays = new ol.layer.Group({
     'title': 'Overlays',
     layers: []
 });
-
-/*var ind_state = new ol.layer.Image({
-            title: 'india_state',
-            // extent: [-180, -90, -180, 90],
-            source: new ol.source.ImageWMS({
-                url: 'http://localhost:8084/geoserver/wms',
-                params: {
-                    'LAYERS': 'india:india_state'
-                },
-                ratio: 1,
-                serverType: 'geoserver'
-            })
-        });*/
 
         var vectorSource = new ol.source.Vector(); // Create vector source
 
         var vectorLayer = new ol.layer.Vector({ // Create vector layer
             source: vectorSource
         });
-
-
 
 map = new ol.Map({
     target: 'map',
@@ -109,111 +123,10 @@ map = new ol.Map({
 
 
 map.addLayer(base_maps);
+map.addLayer(layer_map);
+
 map.addLayer(overlays);
 map.addLayer(vectorLayer);
-
-// //adding the pindrop
-
-// var vectorLayer = new ol.layer.Vector({
-//     source: new ol.source.Vector()
-// });
-// map.addLayer(vectorLayer);
-
-// function dropPin() {
-//     var latitude = parseFloat(document.getElementById('latitudeInput').value);
-//     var longitude = parseFloat(document.getElementById('longitudeInput').value);
-
-//     // Check if latitude and longitude are valid
-//     if (isNaN(latitude) || isNaN(longitude)) {
-//         alert('Please enter valid latitude and longitude.');
-//         return;
-//     }
-
-//     var coordinates = ol.proj.fromLonLat([longitude, latitude]);
-
-//     // Clear previous markers
-//     vectorLayer.getSource().clear();
-
-//     // Add new marker
-//     var marker = new ol.Feature({
-//         geometry: new ol.geom.Point(coordinates)
-//     });
-
-//     // Style the marker
-//     var markerStyle = new ol.style.Style({
-//         image: new ol.style.Icon({
-//             src: 'https://openlayers.org/en/latest/examples/data/icon.png', // You can use any image URL here
-//             anchor: [0.5, 1]
-//         })
-//     });
-
-//     marker.setStyle(markerStyle);
-
-//     // Add marker to the vector layer
-//     vectorLayer.getSource().addFeature(marker);
-
-//     // Zoom to the marker
-//     map.getView().animate({ center: coordinates, zoom: 10 });
-// }
-
-// Add an empty vector source to hold pins
-const pinSource = new ol.source.Vector();
-const pinLayer = new ol.layer.Vector({
-    source: pinSource
-});
-map.addLayer(pinLayer);
-
-
-// Function to toggle the display of the input fields
-function toggleInputs() {
-    const iconContent = document.getElementById('iconContent');
-    iconContent.style.display = iconContent.style.display === 'block' ? 'none' : 'block';
-}
-
-
-// Add event listener to drop a pin
-document.getElementById('locate_Pindrop').addEventListener('click', function () {
-    // Get longitude and latitude values from input fields
-    let lat = parseFloat(document.getElementById("latitudeInput").value);
-    let lon = parseFloat(document.getElementById("longitudeInput").value);
-
-    // Ensure that lon and lat are valid numbers
-    if (isNaN(lon) || isNaN(lat) || lon < -180 || lon > 180 || lat < -90 || lat > 90) {
-        alert("Please enter valid longitude (-180 to 180) and latitude (-90 to 90) values.");
-        return;
-    }
-
-    // Center the map view to the specified coordinates
-    map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
-    map.getView().setZoom(15); // Set desired zoom level
-
-    // Drop a pin at the specified coordinates
-    let pinFeature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
-    });
-
-    // Add the pin feature to the pin source
-    pinSource.addFeature(pinFeature);
-
-    let pinStyle = new ol.style.Style({
-        image: new ol.style.Icon({
-            anchor: [0.5, 1],
-            src: './image/pinn.png' // URL to the pin icon
-        })
-    });
-
-    pinFeature.setStyle(pinStyle);
-});
-
-// Add event listener to remove all pins
-document.getElementById('locate_Pinremove').addEventListener('click', function () {
-    pinSource.clear(); // Clear all features from the pin source
-});
-
-
-
-
-
 
 //overlays.getLayers().push(ind_state);
 var popup = new Popup();
@@ -230,8 +143,8 @@ map.addControl(slider);
 
 var zoom_ex = new ol.control.ZoomToExtent({
     extent: [
-        65.90, 7.48,
-        98.96, 40.30
+        91.24, 25.57,
+        92.23, 26.55
     ]
 });
 map.addControl(zoom_ex);
@@ -246,16 +159,28 @@ var scaleLine = new ol.control.ScaleLine({
 });
 map.addControl(scaleLine);
 
-layerSwitcher = new ol.control.LayerSwitcher({
+// LayerSwitcher for base maps with radio button behavior
+var layerSwitcherBase = new ol.control.LayerSwitcher({
     activationMode: 'click',
     startActive: true,
-    tipLabel: 'Layers', // Optional label for button
-    groupSelectStyle: 'children', // Can be 'children' [default], 'group' or 'none'
-    collapseTipLabel: 'Collapse layers',
+    tipLabel: 'Base Layers',
+    groupSelectStyle: 'children', // Radio button style for base layers
+    collapseTipLabel: 'Collapse layers'
 });
-map.addControl(layerSwitcher);
+map.addControl(layerSwitcherBase);
 
-layerSwitcher.renderPanel();
+layerSwitcherBase.renderPanel();
+
+// LayerSwitcher for label layer with checkbox behavior
+var layerSwitcherLabel = new ol.control.LayerSwitcher({
+    activationMode: 'click',
+    startActive: true,
+    tipLabel: 'Label Layers',
+    groupSelectStyle: 'none', // Checkbox style for label layer
+    collapseTipLabel: 'Collapse layers'
+});
+map.addControl(layerSwitcherLabel);
+layerSwitcherLabel.renderPanel();
 
 
 
@@ -280,33 +205,6 @@ geocoder.on('addresschosen', function(evt) {
     }, 3000);
 });
 
-
-
-
-// //custom Scale
-
-// function scale() {
-//     var resolution = map.getView().get('resolution');
-
-//     var units = map.getView().getProjection().getUnits();
-
-//     var dpi = 25.4 / 0.28;
-//     var mpu = ol.proj.Units.METERS_PER_UNIT[units];
-//     //alert(resolution);
-//     var scale = resolution * mpu * 39.37 * dpi;
-//     //alert(scale);
-//     if (scale >= 9500 && scale <= 950000) {
-//         scale = Math.round(scale / 1000) + "K";
-//     } else if (scale >= 950000) {
-//         scale = Math.round(scale / 1000000) + "M";
-//     } else {
-//         scale = Math.round(scale);
-//     }
-//     document.getElementById('scale_bar1').innerHTML = "Scale = 1 : " + scale;
-// }
-// scale();
-
-// map.getView().on('change:resolution', scale);
 
 
 //legend
@@ -451,8 +349,6 @@ $(function() {
     });
 });
 
-
-
 // layer dropdown draw query
 $(document).ready(function() {
     $.ajax({
@@ -555,9 +451,6 @@ function query() {
     }
     //alert(value_txt);
 
-
-
-
     var url = "http://localhost:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=" + value_layer + "&CQL_FILTER=" + value_attribute + "%20" + value_operator + "%20" + value_txt + "&outputFormat=application/json"
     //console.log(url);
 
@@ -615,8 +508,6 @@ function query() {
                 }
             }
         }
-
-
 
         var table = document.createElement("table");
         table.setAttribute("class", "table table-hover table-striped");
@@ -759,22 +650,6 @@ function highlight(evt) {
         });
 
     }
-
-
-
-
-    /*$(function() {
-  $("#table td").each(function() {
-    if ($(this).text() == feature.get('gid')) {
-     // $(this).css('color', 'red');
-       $(this).parent("tr").css("background-color", "grey");
-    }
-  });
-});*/
-
-
-
-
 };
 
 // highlight the feature on map and table on row select in table
@@ -1130,7 +1005,7 @@ function clear_all() {
     if (popup) {
         popup.hide();
     }
-    map.getView().fit([65.90, 7.48, 98.96, 40.30], {
+    map.getView().fit([ 91.24, 25.57, 92.23, 26.55], {
         duration: 1590,
         size: map.getSize()
     });

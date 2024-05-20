@@ -24,6 +24,6 @@ function display_toggle_side_Popup(id) {
 
 
 // Add an event listener to the form to prevent click propagation
-document.getElementById('printform').addEventListener('click', function(event) {
+document.getElementById('printform').addEventListener('click', function (event) {
   event.stopPropagation();
 });
